@@ -1,7 +1,11 @@
 Human And Nature DYnamical model
 ================================
 
-Implementation based on Motesharrei et al. (2014 - not published yet)
+HANDY model was formulated in  
+Motesharrei S., Rivas, J. and Kalnay E., __Human and Nature Dynamics (HANDY): Modeling Inequality and Use of Resources in the Collapse or Sustainability of Societies__, 2014
+
+Here lies my implementation of HANDY!  
+_May we evolve before the collapse!_
 
 Martin Deshaies-Jacques
 
@@ -9,8 +13,8 @@ Martin Deshaies-Jacques
 
 [www.science.martn.info](http://www.science.martn.info)
 
-Abstract Motesharrei et al. (2014)
-----------------------------------
+Abstract from Motesharrei et al. (2014)
+---------------------------------------
 There are widespread concerns that current trends in resource-use are unsustainable, but possibilities of overshoot/collapse remain controversial. Collapses have occurred frequently in history, often followed by centuries of economic, intellectual, and population decline. Many different natural and social phenomena have been invoked to explain specific collapses, but a general explanation remains elusive.
 
 In this paper, we build a human population dynamics model by adding accumulated wealth and economic inequality to a predator-prey model of humans and nature. The model structure, and simulated scenarios that offer significant implications, are explained. Four equations describe the evolution of Elites, Commoners, Nature, and Wealth. The model shows Economic Stratification or Ecological Strain can independently lead to collapse, in agreement with the historical record.

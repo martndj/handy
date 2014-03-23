@@ -4,6 +4,7 @@ from handy import handy
 
 
 def checkPlot(model, axe):
+    if not isinstance(model, handy): raise TypeError()
     if not model.isIntegrated: raise Exception('Not integrated')
     if axe==None:
         axe=plt.subplot(111)
