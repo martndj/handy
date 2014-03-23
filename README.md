@@ -22,3 +22,13 @@ In this paper, we build a human population dynamics model by adding accumulated 
 The measure “Carrying Capacity” is developed and its estimation is shown to be a practical means for early detection of a collapse. Mechanisms leading to two types of collapses are discussed. The new dynamics of this model can also reproduce the irreversible collapses found in history. Collapse can be avoided, and population can reach a steady state at maximum carrying capacity if the rate of depletion of nature is reduced to a sustainable level and if
 resources are distributed equitably.
 
+Use case
+--------
+Put handy folder in your $PYTHONPATH.
+
+    import handy
+    m=handy.handy(depletionR=20.e-6)
+    m.integrate(900, x0=[100., 25.])
+    ax1,ax2=handy.plotState(m)
+    ax1.legend(loc='upper left')
+    ax2.legend(loc='upper right')

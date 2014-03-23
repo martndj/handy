@@ -88,5 +88,5 @@ def plotState(model, axe=None, showEQ=False):
     axe=checkPlot(model, axe)
     axe=plotPop(model, axe=axe, showEQ=showEQ)
     ax2=axe.twinx()
-    ax2=plotRessources(model)
+    ax2=plotRessources(model, axe=ax2)
     return axe, ax2
