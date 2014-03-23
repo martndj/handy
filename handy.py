@@ -30,14 +30,16 @@ class handy(object):
     #----| Standard overload |------------------------------
 
     def __getitem__(self, i):
-        if i==0:
-            return self.x
-        elif i==1:
-            return self.y
-        elif i==2:
-            return self.w
-        else:
+        if i>=self.nDt+1:
             raise IndexError()
+        else:
+            return self.x[:,i], self.y[i], self.w[i]
+
+    #----| Equilibrium |------------------------------------
+
+
+
+    #def eqDepletionR()
 
 
     #----| State functions |--------------------------------
@@ -134,32 +136,68 @@ class handy(object):
             
     #----| Post-processing |--------------------------------
 
-    def printAll(self, i):
-        for f in (self.minConsumption, self.inequality, 
-                  self.wealthThreshold, self.salary, 
-                  self.consumption, self.deathR, 
-                  self.birthR, self.depletionR,
-                  self.workProd, self.natureProd,
-                  self.increment 
-                  ):
-
-            print(self.x[:,i], self.y[i], self.w[i])
-            print(f, f(self.x[:,i], self.y[i], self.w[i]))
-            print
-
-
-    def plotAll(self, axe=None):
+    def plotPop(self, axe=None, showEQ=False):
         if not self.isIntegrated: raise Exception('Not integrated')
 
+        color_l=['b', 'r', 'm']
         if axe==None:
             axe=plt.subplot(111)
-            for i in xrange(self.nClasses):
-                axe.plot(self.time, self.x[i], label='$x_{%d}$'%i)
-            axe2=axe.twinx()
-            axe2.plot(self.time, self.y, label='$y$', color='c')
-            axe2.plot(self.time, self.w, label='$w$', color='m')
+        for i in xrange(self.nClasses):
+            axe.plot(self.time, self.x[i], 
+                     color=color_l[np.mod(i,len(color_l))],
+                     label='$x_{%d}$'%i)
+            if i>0 and showEQ:
+                axe.plot(self.time, 
+                        self.inequality(self.x[i], 
+                                        self.y[i], 
+                                        self.w[i])*self.x[i], 
+                        color=color_l[np.mod(i,len(color_l))],
+                        linestyle='--',
+                        label='$x_{%d}^{EQ}$'%i)
         axe.set_xlabel('$t$')
         axe.set_ylabel('population')
-        axe2.set_ylabel('eco$')
         axe.legend(loc='upper left')
+        return axe
+        
+
+    def plotDemo(self, axe=None):
+        if not self.isIntegrated: raise Exception('Not integrated')
+        axe=self.plotPop(axe=axe, showEQ=False)
+        axe2=axe.twinx()
+        deathR=np.zeros(shape=(self.nClasses, self.nDt+1))
+        birthR=np.zeros(shape=(self.nClasses, self.nDt+1))
+       
+        for i in xrange(self.nDt+1):
+            deathR[:,i]=self.deathR(self.x[:,i], self.y[i], self.w[i])
+            birthR[:,i]=self.birthR(self.x[:,i], self.y[i], self.w[i])
+        
+        color_l=['b', 'r', 'm']
+        for i in xrange(self.nClasses):
+           axe2.plot(self.time, birthR[i], 
+                     color=color_l[np.mod(i,len(color_l))],
+                     linestyle=':',
+                     label=r'$\beta_{%d}$'%i)
+           axe2.plot(self.time, deathR[i], 
+                     color=color_l[np.mod(i,len(color_l))],
+                     linestyle='--',
+                     label=r'$\alpha_{%d}$'%i)
+        axe2.axhline(y=self._deathR_min, label=r'$\alpha_m$',
+                     color='k', linestyle='-')
+        axe2.axhline(y=self._deathR_max, label=r'$\alpha_M$',
+                     color='k', linestyle='--')
+        axe2.set_ylabel('$y^{-1}$')
         axe2.legend(loc='upper right')
+
+        return axe, axe2
+        
+
+    def plotAll(self, axe=None, showEQ=False):
+        if not self.isIntegrated: raise Exception('Not integrated')
+        axe=self.plotPop(axe=axe, showEQ=showEQ)
+        axe2=axe.twinx()
+        axe2.plot(self.time, self.y, label='$y$', color='g')
+        axe2.plot(self.time, self.w, label='$w$', color='c')
+        axe2.set_ylabel('eco$')
+        axe2.legend(loc='upper right')
+
+        return axe, axe2
