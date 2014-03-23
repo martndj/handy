@@ -160,6 +160,29 @@ class handy(object):
         return axe
         
 
+    def plotConsumption(self, axe=None):
+        if not self.isIntegrated: raise Exception('Not integrated')
+        if axe==None:
+            axe=plt.subplot(111)
+        consumption=np.zeros(shape=(self.nClasses, self.nDt+1))
+        
+        for i in xrange(self.nDt+1):
+            consumption[:,i]=self.consumption(self.x[:,i], 
+                                              self.y[i], 
+                                              self.w[i])
+        
+        color_l=['b', 'r', 'm']
+        for i in xrange(self.nClasses):
+           axe.plot(self.time, consumption[i], 
+                     color=color_l[np.mod(i,len(color_l))],
+                     linestyle='-',
+                     label=r'$C_{%d}$'%i)
+        axe.set_ylabel('eco$')
+        axe.legend(loc='upper right')
+
+        return axe, axe2
+        
+
     def plotDemo(self, axe=None):
         if not self.isIntegrated: raise Exception('Not integrated')
         axe=self.plotPop(axe=axe, showEQ=False)
@@ -168,8 +191,8 @@ class handy(object):
         birthR=np.zeros(shape=(self.nClasses, self.nDt+1))
        
         for i in xrange(self.nDt+1):
-            deathR[:,i]=self.deathR(self.x[:,i], self.y[i], self.w[i])
-            birthR[:,i]=self.birthR(self.x[:,i], self.y[i], self.w[i])
+            deathR[:,i]=self.deathR(self.x[:,i], self.y[i], self.w[i])*100.
+            birthR[:,i]=self.birthR(self.x[:,i], self.y[i], self.w[i])*100.
         
         color_l=['b', 'r', 'm']
         for i in xrange(self.nClasses):
@@ -181,17 +204,17 @@ class handy(object):
                      color=color_l[np.mod(i,len(color_l))],
                      linestyle='--',
                      label=r'$\alpha_{%d}$'%i)
-        axe2.axhline(y=self._deathR_min, label=r'$\alpha_m$',
+        axe2.axhline(y=self._deathR_min*100., label=r'$\alpha_m$',
                      color='k', linestyle='-')
-        axe2.axhline(y=self._deathR_max, label=r'$\alpha_M$',
+        axe2.axhline(y=self._deathR_max*100., label=r'$\alpha_M$',
                      color='k', linestyle='--')
-        axe2.set_ylabel('$y^{-1}$')
+        axe2.set_ylabel('$\%/y$')
         axe2.legend(loc='upper right')
 
         return axe, axe2
         
 
-    def plotAll(self, axe=None, showEQ=False):
+    def plotState(self, axe=None, showEQ=False):
         if not self.isIntegrated: raise Exception('Not integrated')
         axe=self.plotPop(axe=axe, showEQ=showEQ)
         axe2=axe.twinx()
